@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-	<h2>Revenue Statistics</h2>
+	<h2 class="text-center">Revenue Statistics</h2>
 	<div class="container">
 		<table style="width:100%; border: 1px solid #000;">
 			  <tr>

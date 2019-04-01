@@ -35,7 +35,7 @@
                                                 <label class="control-label">Passenger x {{$booked->total_passenger}}</label>
                                                  <h3 class="price text-danger"><strong>{{$booked->total_cost}} VND</strong></h3>
                                                 <div>
-                                                    <a href="{{ route('flightDetail', ['flight_id' => $booked->id]) }}" class="btn btn-link">See Detail</a>
+                                                    <a href="{{ route('detailbooking', ['id' => $booked->bookid]) }}" class="btn btn-link">See Detail</a>
                                                     <a href="{{ route('Destroy', ['bookid' => $booked->bookid]) }}" class="btn btn-primary" onclick="return confirm('Are you sure you want to destroy this Ticket?');">Remove</a>
                                                 </div>
                                             </div>

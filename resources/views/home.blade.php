@@ -20,7 +20,7 @@
 
                   <a class="btn btn-primary" href="{{ route('user.update') }}">Edit information</a>
                   <a class="btn btn-primary" href="{{ route('index') }}">Start Book Flights</a>
-                 
+                  <a class="btn btn-primary" href="{{ route('MannageTicket', ['userid'=>Auth::user()->id]) }}">Ticket Management</a> 
                 </div>
             </div>
         </div>

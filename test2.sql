@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 30, 2019 at 04:55 PM
+-- Generation Time: Apr 01, 2019 at 05:12 PM
 -- Server version: 10.1.36-MariaDB
 -- PHP Version: 7.1.23
 
@@ -101,8 +101,9 @@ CREATE TABLE `booking_list` (
 --
 
 INSERT INTO `booking_list` (`id`, `user_id`, `total_passenger`, `total_cost`, `payment_method`, `card_number`, `name_card`, `ccv_code`, `flight_id`, `created_at`, `updated_at`) VALUES
-(60, 5, 1, 2000000, 'transfer', '21312321321321', 'tiencao', '111', 20, '2019-03-29 09:46:14', '2019-03-29 09:46:14'),
-(61, 5, 2, 4000000, 'transfer', '3213213213213', 'caotien', '111', 20, '2019-03-29 09:46:50', '2019-03-29 09:46:50');
+(67, 5, 1, 12000000, 'paypal', '232111212132131212', 'tiencaojr', '121', 22, '2019-03-31 06:49:59', '2019-03-31 06:49:59'),
+(70, 9, 3, 90000000, 'credit_card', '123213213213213', 'Bao Anh', '123', 24, '2019-04-01 07:09:27', '2019-04-01 07:09:27'),
+(71, 5, 2, 6000000, 'transfer', '12321321312321', 'Phú Lê', '123', 26, '2019-04-01 07:22:29', '2019-04-01 07:22:29');
 
 -- --------------------------------------------------------
 
@@ -162,7 +163,8 @@ INSERT INTO `flights` (`id`, `flight_class_id`, `flight_type`, `flight_code`, `f
 (22, 3, 2, 'FC003', 5, 0, 6000000, 5, 2, '2019-04-03', '2019-04-04', '2019-04-03 23:00:00', '2019-04-04 02:00:00', '03:00:00', '2019-03-29 08:08:04', '2019-03-29 08:08:04'),
 (23, 1, 1, 'FC004', 3, 0, 3000000, 3, 5, '2019-04-05', NULL, '2019-04-05 01:00:00', '2019-04-05 22:00:00', '21:00:00', '2019-03-29 08:09:28', '2019-03-29 08:09:28'),
 (24, 1, 2, 'FC005', 6, 0, 30000000, 8, 1, '2019-04-06', '2019-04-09', '2019-04-06 01:00:00', '2019-04-09 19:00:00', '18:00:00', '2019-03-29 08:11:19', '2019-03-29 08:11:19'),
-(25, 3, 1, 'FC006', 2, 0, 3000000, 1, 5, '2019-04-10', NULL, '2019-04-10 01:15:00', '2019-04-10 05:10:00', '03:55:00', '2019-03-29 08:15:24', '2019-03-29 08:15:24');
+(25, 3, 1, 'FC006', 2, 0, 3000000, 1, 5, '2019-04-10', NULL, '2019-04-10 01:15:00', '2019-04-10 05:10:00', '03:55:00', '2019-03-29 08:15:24', '2019-03-29 08:15:24'),
+(26, 2, 1, 'FC007', 2, 0, 3000000, 1, 6, '2019-04-11', '2019-04-13', '2019-04-11 01:01:00', '2019-04-13 13:01:00', '12:00:00', '2019-04-01 07:19:20', '2019-04-01 07:19:20');
 
 -- --------------------------------------------------------
 
@@ -238,9 +240,16 @@ CREATE TABLE `passenger` (
 --
 
 INSERT INTO `passenger` (`id`, `title`, `pas_first_name`, `pas_last_name`, `flight_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(71, 'mr', 'tiến', 'cao', 20, 5, '2019-03-29 09:46:13', '2019-03-29 09:46:13'),
-(72, 'mr', 'cao', 'tiến', 20, 5, '2019-03-29 09:46:50', '2019-03-29 09:46:50'),
-(73, 'mr', 'tiến', 'cao', 20, 5, '2019-03-29 09:46:50', '2019-03-29 09:46:50');
+(84, 'mrs', 'Trí', 'Lê', 22, 5, '2019-03-31 06:49:59', '2019-03-31 06:49:59'),
+(85, 'mr', 'van', 'anh', 20, 9, '2019-03-31 07:34:36', '2019-03-31 07:34:36'),
+(86, 'mr', 'tien', 'cao', 22, 5, '2019-03-31 17:39:59', '2019-03-31 17:39:59'),
+(87, 'mr', 'Phi', 'Hung', 22, 9, '2019-04-01 07:06:26', '2019-04-01 07:06:26'),
+(88, 'mrs', 'Kim', 'Tuyet', 22, 9, '2019-04-01 07:06:26', '2019-04-01 07:06:26'),
+(89, 'mrs', 'Đông', 'Nhi', 24, 9, '2019-04-01 07:09:26', '2019-04-01 07:09:26'),
+(90, 'mr', 'Thịnh', 'Noo', 24, 9, '2019-04-01 07:09:26', '2019-04-01 07:09:26'),
+(91, 'mrs', 'Bào', 'Anh', 24, 9, '2019-04-01 07:09:26', '2019-04-01 07:09:26'),
+(92, 'mr', 'Quang', 'Lê', 26, 5, '2019-04-01 07:22:28', '2019-04-01 07:22:28'),
+(93, 'mrs', 'Bảo', 'Anh', 26, 5, '2019-04-01 07:22:28', '2019-04-01 07:22:28');
 
 -- --------------------------------------------------------
 
@@ -281,11 +290,11 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `dob`, `gender`, `phone`, `address`, `isAdmin`, `remember_token`, `created_at`, `updated_at`) VALUES
 (4, 'Bùi Văn Phúc', 'phucbui@gmail.com', '$2y$10$t1OqxbW1k.VsErB8UyrFvujpggseK0LrtDVr908Rcz8lnAfW5m/VO', NULL, NULL, '1111111111', NULL, NULL, 'NgH9rVQYFeqRvlfZaxk1KtOfpCRONVxZDTjk3iqvVVDMMg55Zi9N5bA5B6LI', '2019-03-28 19:13:06', '2019-03-28 19:13:06'),
-(5, 'Cao Lê Viết Tiến', 'tiencao@gmail.com', '$2y$10$Gc6bHYg1llQhzeSR40pYmuNr.bpY2yUeB4E7VwY3weeVK6G85e7vu', NULL, NULL, '2222222222', NULL, NULL, 'b1TszNIn77SKF1ADqnjEk9auHfBP7UieYfjnuqv8F3GQMKQqaUoVdwVLBvK9', '2019-03-28 19:13:44', '2019-03-28 19:13:44'),
+(5, 'Cao Lê Viết Tiến', 'tiencao@gmail.com', '$2y$10$Gc6bHYg1llQhzeSR40pYmuNr.bpY2yUeB4E7VwY3weeVK6G85e7vu', NULL, NULL, '2222222222', NULL, NULL, 'NtJLtHYueAcSj8PL5anqZfWDNio8JUUjUPL6UEFFS2V3WrPJrw8dRuv7ki2w', '2019-03-28 19:13:44', '2019-03-28 19:13:44'),
 (6, 'Lê Văn Trí', 'trile@gmail.com', '$2y$10$0agFJg86Y84WitE.t4Y54ukN8pIAnXdxXqDNDl90OqzfmErVnK8sS', NULL, NULL, '3333333333', NULL, NULL, 'ZaQdSMG6vRRTA9IQK11aOZP6pwwvJUgqABtH0FGr2N0QqEX0uEI1qZIyvtn4', '2019-03-28 19:14:21', '2019-03-28 19:14:21'),
 (7, 'Trần Thanh Duy', 'duytran@gmail.com', '$2y$10$4on9QV1lDRfuiQ/ZU.B1qOZKSBTZdIO3PqtZfOUg8gJK9dpnBRyq2', NULL, NULL, '4444444444', NULL, NULL, 'NO4cfPvppq2BlITkJCCFaaVJluBuQjfEmAGsY9E2ImwXaWZAIZzBcM1N9drL', '2019-03-28 19:14:51', '2019-03-28 19:14:51'),
 (8, 'Phạm Minh Thuận', 'thuanpham@gmail.com', '$2y$10$3pmaf71hiCZz1ljk0.kw5.XiQCSSu/OZplVHTdxb1BgFqwQhKtdiy', NULL, NULL, '5555555555', NULL, NULL, 'NTmrUQhs7vQj2popjB8kqiLX9F03jc3TRBa11GFy3iUJ2z1pvhTA3XU2KjUV', '2019-03-28 19:15:18', '2019-03-28 19:15:18'),
-(9, 'ADMIN', 'admin@gmail.com', '$2y$10$k6V.lctJrtvVGZhW.RTbIeBLtSxZodNxRwwtQFaLDeGAqHTHtC3BS', NULL, NULL, '5555555554', NULL, 1, 'WoMeyydqAcMYzZ2GuOsV81NropqXK7Wkkkzv5IJ7e4MfrE4k3uNQbz1bSKxi', '2019-03-28 19:17:17', '2019-03-28 19:17:17');
+(9, 'ADMIN', 'admin@gmail.com', '$2y$10$k6V.lctJrtvVGZhW.RTbIeBLtSxZodNxRwwtQFaLDeGAqHTHtC3BS', NULL, NULL, '5555555554', NULL, 1, 'OzaVzC6ZEeAnkTPrXq6L3RUqXbGq680uYkmpK46BoY046WhT1xI0bG2JymTg', '2019-03-28 19:17:17', '2019-03-28 19:17:17');
 
 --
 -- Indexes for dumped tables
@@ -372,7 +381,7 @@ ALTER TABLE `airports`
 -- AUTO_INCREMENT for table `booking_list`
 --
 ALTER TABLE `booking_list`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `countries`
@@ -384,7 +393,7 @@ ALTER TABLE `countries`
 -- AUTO_INCREMENT for table `flights`
 --
 ALTER TABLE `flights`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `flight_classes`
@@ -402,7 +411,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `passenger`
 --
 ALTER TABLE `passenger`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
 -- AUTO_INCREMENT for table `users`

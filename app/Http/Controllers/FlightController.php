@@ -1,13 +1,12 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use App\Flight;
 use App\Airport;
+use Auth;
 
 class FlightController extends Controller
 {
@@ -18,18 +17,18 @@ class FlightController extends Controller
      */
     public function index()
     {
-       $flights = DB::table('flights')
-                              ->join('airplanes', 'flights.flight_airplane_id', 'airplanes.id')
-                              ->join('airports as airport_from', 'flights.flight_airport_from_id', 'airport_from.id')
-                              ->join('airports as airport_to', 'flights.flight_airport_to_id', 'airport_to.id')
-                              ->select(
-                                'flights.*',
-                                'airplanes.airplane_name',
-                                'airport_from.airport_code as airport_from_code',
-                                'airport_from.city_name as city_from',
-                                'airport_to.airport_code as airport_to_code',
-                                'airport_to.city_name as city_to'
-                              )->get();
+      $flights = DB::table('flights')
+                            ->join('airplanes', 'flights.flight_airplane_id', 'airplanes.id')
+                            ->join('airports as airport_from', 'flights.flight_airport_from_id', 'airport_from.id')
+                            ->join('airports as airport_to', 'flights.flight_airport_to_id', 'airport_to.id')
+                            ->select(
+                              'flights.*',
+                              'airplanes.airplane_name',
+                              'airport_from.airport_code as airport_from_code',
+                              'airport_from.city_name as city_from',
+                              'airport_to.airport_code as airport_to_code',
+                              'airport_to.city_name as city_to'
+                            )->get();
       $airports = DB::table('airports')->get();
       $airplanes = DB::table('airplanes')->get();
       $flightClasses = DB::table('flight_classes')->get();
@@ -39,7 +38,7 @@ class FlightController extends Controller
         'airplanes' => $airplanes,
         'airports' => $airports,
         'flightClasses' => $flightClasses
-      ]);
+      ]); 
     }
 
     /**
@@ -49,14 +48,14 @@ class FlightController extends Controller
      */
     public function create()
     {
-        $airports = DB::table('airports')->get();
-        $airplanes = DB::table('airplanes')->get();
-        $flightClasses = DB::table('flight_classes')->get();
-        return view('admin.create-flight', [          
-          'airports' => $airports,
-          'airplanes' => $airplanes,
-          'flightClasses' => $flightClasses,
-        ]);
+      $airports = DB::table('airports')->get();
+      $airplanes = DB::table('airplanes')->get();
+      $flightClasses = DB::table('flight_classes')->get();
+      return view('admin.create-flight', [          
+        'airports' => $airports,
+        'airplanes' => $airplanes,
+        'flightClasses' => $flightClasses,
+      ]);
     }
 
     /**
@@ -139,37 +138,37 @@ class FlightController extends Controller
     }
 
 
-     public function flightDetail($flight_id){
-       $airports = new airport();
+   public function flightDetail($flight_id){
+     $airports = new airport();
 
-        $flights = DB::table('flights')
-                      ->join('airplanes', 'flights.flight_airplane_id', 'airplanes.id')
-                      ->join('airports as airport_from', 'flights.flight_airport_from_id', 'airport_from.id')
-                      ->join('airports as airport_to', 'flights.flight_airport_to_id', 'airport_to.id')
-                      ->join('flight_classes','flights.flight_class_id', 'flight_classes.id')
-                      ->select(
-                        'flights.*',
-                        'airplanes.airplane_name',
-                        'airport_from.airport_code as airport_from_code',
-                        'airport_from.city_name as city_from',
-                        'airport_from.airport_name as airport_from_name',
-                        'airport_to.airport_code as airport_to_code',
-                        'airport_to.city_name as city_to',
-                        'airport_to.airport_name as airport_to_name',
-                        'flight_classes.flight_class_name as flight_class'
-                      );
-        $detail = $flights->where('flights.id',$flight_id)->get();
+      $flights = DB::table('flights')
+                    ->join('airplanes', 'flights.flight_airplane_id', 'airplanes.id')
+                    ->join('airports as airport_from', 'flights.flight_airport_from_id', 'airport_from.id')
+                    ->join('airports as airport_to', 'flights.flight_airport_to_id', 'airport_to.id')
+                    ->join('flight_classes','flights.flight_class_id', 'flight_classes.id')
+                    ->select(
+                      'flights.*',
+                      'airplanes.airplane_name',
+                      'airport_from.airport_code as airport_from_code',
+                      'airport_from.city_name as city_from',
+                      'airport_from.airport_name as airport_from_name',
+                      'airport_to.airport_code as airport_to_code',
+                      'airport_to.city_name as city_to',
+                      'airport_to.airport_name as airport_to_name',
+                      'flight_classes.flight_class_name as flight_class'
+                    );
+      $detail = $flights->where('flights.id',$flight_id)->get();
 
-        $airport_from = $airports->where('airports.id',$detail[0]->flight_airport_from_id)->get();
-        $airport_to= $airports->where('airports.id',$detail[0]->flight_airport_to_id)->get();
+      $airport_from = $airports->where('airports.id',$detail[0]->flight_airport_from_id)->get();
+      $airport_to= $airports->where('airports.id',$detail[0]->flight_airport_to_id)->get();
 
-        $flightDetail = $flights->where('flights.id', $flight_id)->get();
-        return view('detail_flight', [
-            'flight' => $flightDetail[0],
-            'airport_from' => $airport_from[0],
-            'airport_to' => $airport_to[0]
-          ]);
-      }
+      $flightDetail = $flights->where('flights.id', $flight_id)->get();
+      return view('detail_flight', [
+          'flight' => $flightDetail[0],
+          'airport_from' => $airport_from[0],
+          'airport_to' => $airport_to[0]
+        ]);
+    }
 
 
     /**

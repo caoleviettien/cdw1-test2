@@ -100,6 +100,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div class="col-sm-6">
+                                                            <a href="{{ route('passenger.index', ['pasid' => $passenger->id]) }}" class="btn btn-primary">Edit Passenger</a>
+                                                            <a href="{{route('DestroyPassenger', ['pasid'=>$passenger->id])}}" class="btn btn-danger">Remove Passenger</a>
+                                                        </div>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -112,7 +116,7 @@
                                                         <strong>Passengers Fare x {{$fare}}</strong>
                                                     </div>
                                                     <div class="pull-right">
-                                                        <strong>{{$booking->total_cost}} x {{$fare}} VND</strong>
+                                                        <strong>{{$flight->flight_cost}} x {{$fare}} VND</strong>
                                                     </div>
                                                     <div class="clearfix"></div>
                                                 </li>

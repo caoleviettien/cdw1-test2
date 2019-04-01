@@ -69,6 +69,23 @@ Route::get('/detail-booking/{id}', [
 
 
 /*
+  Edit Passenger
+*/
+Route::get('passenger/update/{pasid}', 'BookingController@passenger')->name('passenger.index');
+Route::post('passenger/update', 'BookingController@editPassenger')->name('passenger.update');
+
+
+/*
+  Destroy Passenger
+*/
+  Route::get('/destroy-passenger/{pasid}', [
+  'uses' => 'BookingController@removePassenger',
+  'as' => 'DestroyPassenger'
+]);
+
+
+
+/*
   Manage ticket
 */
   Route::get('/manage-ticket/{userid}', [
@@ -117,9 +134,20 @@ Route::get('admin/ticketmanagement', [
 ])->middleware('admin');
 
 /*
+   Flight Management
+*/
+Route::get('admin/flightmanagement', [
+  'uses' => 'AdminController@manageFlight',
+  'as' => 'ManageFlight'
+])->middleware('admin');
+
+/*
   User routes
 */
 Auth::routes();
 Route::get('user/update', 'Auth\UserController@index')->name('user.update');
 Route::post('user/update', 'Auth\UserController@update')->name('user.update');
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

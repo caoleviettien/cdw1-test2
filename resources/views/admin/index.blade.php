@@ -11,10 +11,11 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    <a class="btn btn-primary" href="{{ route('createFlight') }}">Manage Flights</a>
+                    <a class="btn btn-primary" href="{{ route('createFlight') }}">Create Flights</a>
+                    <a class="btn btn-primary" href="{{ route('ManageFlight') }}">Manage Flights</a>
                     <a class="btn btn-primary" href="{{ route('RevenueStatistics') }}">Revenue Statistics</a>
                     <a class="btn btn-primary" href="{{ route('AirportStatistics') }}">Airport Statistics</a>
-                    <a class="btn btn-primary" href="{{ route('TicketManagement') }}">Ticket Management</a>
+                    <a class="btn btn-primary" href="{{ route('TicketManagement') }}">Ticket Management</a>       
                 </div>
             </div>
         </div>

@@ -34,6 +34,61 @@ class BookingController extends Controller
         //
     }
 
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */ 
+    public function editPassenger(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withInput($request->all())->withErrors($validator->errors());
+
+        } else {                       
+                $passenger = Db::table('passenger')->where('id', '=', $request->id)->update([
+                    'title' => $request->title,
+                    'pas_first_name' => $request->firstname,
+                    'pas_last_name' => $request->lastname,
+                ]);
+                session()->flash('message', 'Update infomation successfully.');
+                return redirect()->action('BookingController@MannageTicket', ['userid'=>Auth::user()->id]);
+            }
+    }
+
+     public function passenger($pasid) {
+        $passenger =  Db::table('passenger')->where('id', '=', $pasid)->get()->first();
+        return view('editpassenger', [
+          'passenger' => $passenger
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function removePassenger($pasid)
+    {
+        $pas_del = DB::table('passenger')->where('id', '=', $pasid)->get()->first();        
+        $total_pas = DB::table('booking_list')->where('flight_id', '=', $pas_del->flight_id)->get()->first();
+        $total_passenger =  $total_pas->total_passenger-1;
+
+        DB::table('passenger')->where('id', '=', $pasid)->delete();
+        DB::table('booking_list')->where('flight_id', '=', $pas_del->flight_id)->update(['total_passenger'=> $total_passenger]);
+
+        return redirect()->back();
+    }
+
+     
+
     /**
      * Store a newly created resource in storage.
      *
@@ -121,7 +176,7 @@ class BookingController extends Controller
         ])->get();
 
         $fare = $passenger->count();
-        $cost = $flight->flight_cost * $passenger->count();
+        $cost = $flight->flight_cost * $fare;
 
         return view('detail_booking', [
         'booking' => $booking,
@@ -148,7 +203,7 @@ class BookingController extends Controller
         if ($userid == $users) {
             $booked = DB::table('booking_list')
                               ->join('flights', 'flights.id', 'booking_list.flight_id')  
-                              ->join('airplanes', 'flights.fslight_airplane_id', 'airplanes.id')                          
+                              ->join('airplanes', 'flights.flight_airplane_id', 'airplanes.id')                          
                               ->join('airports as airport_from', 'flights.flight_airport_from_id', 'airport_from.id')
                               ->join('airports as airport_to', 'flights.flight_airport_to_id', 'airport_to.id')
                               ->select(
@@ -168,7 +223,6 @@ class BookingController extends Controller
             return back();
         }      
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -202,7 +256,6 @@ class BookingController extends Controller
     public function destroy($bookid)
     {
         $book_des = DB::table('booking_list')->where('id', '=', $bookid)->get()->first();
-        var_dump($book_des->flight_id);
         DB::table('booking_list')->where('id', '=', $bookid)->delete();
         DB::table('passenger')->where('flight_id', '=', $book_des->flight_id)->delete();
         return back();

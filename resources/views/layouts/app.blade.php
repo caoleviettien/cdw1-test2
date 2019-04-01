@@ -29,9 +29,18 @@
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    BOOK FLIGHTS - GTeam
-                </a>
+                @if (auth()->check())
+                    @if(auth()->user()->isAdmin)
+                        <a class="navbar-brand" href="">
+                            BOOK FLIGHTS
+                        </a>
+                    @else
+                        <a class="navbar-brand" href="{{ url('/') }}">
+                            BOOK FLIGHTS - GTeam
+                        </a>
+                    @endif
+                @endif
+                
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
