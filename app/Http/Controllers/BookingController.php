@@ -14,188 +14,6 @@ use App\Flight;
 
 class BookingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */ 
-    public function create()
-    {
-        //
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */ 
-    public function editPassenger(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'firstname' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withInput($request->all())->withErrors($validator->errors());
-
-        } else {                       
-                $passenger = Db::table('passenger')->where('id', '=', $request->id)->update([
-                    'title' => $request->title,
-                    'pas_first_name' => $request->firstname,
-                    'pas_last_name' => $request->lastname,
-                ]);
-                session()->flash('message', 'Update infomation successfully.');
-                return redirect()->action('BookingController@MannageTicket', ['userid'=>Auth::user()->id]);
-            }
-    }
-
-     public function passenger($pasid) {
-        $passenger =  Db::table('passenger')->where('id', '=', $pasid)->get()->first();
-        return view('editpassenger', [
-          'passenger' => $passenger
-        ]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function removePassenger($pasid)
-    {
-        $pas_del = DB::table('passenger')->where('id', '=', $pasid)->get()->first();        
-        $total_pas = DB::table('booking_list')->where('flight_id', '=', $pas_del->flight_id)->get()->first();
-        $total_passenger =  $total_pas->total_passenger-1;
-
-        DB::table('passenger')->where('id', '=', $pasid)->delete();
-        DB::table('booking_list')->where('flight_id', '=', $pas_del->flight_id)->update(['total_passenger'=> $total_passenger]);
-
-        return redirect()->back();
-    }
-
-     
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function booking(Request $request)
-    {
-        $data = array();
-        for ($i=1; $i <= $request->pas; $i++) { 
-            $data[] = [ 
-                'title'.$i => 'required|string|max:25',
-                'pas_first_name'.$i => 'required|string|max:255',
-                'pas_last_name'.$i => 'required|string|max:255',];
-                
-                }
-
-        $validator = Validator::make($request->all(), [
-         $data,
-          'payment_method' => 'required|string|max:255',
-          'card_number' => 'required|string|max:19|min:13',
-          'name_card' => 'required|string|max:255',
-          'ccv_code' => 'required|string|max:4|min:3',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()
-                        ->back()
-                        ->withErrors($validator->errors())
-                        ->withInput();
-                    }
-        else {
-            $input = $request->all();
-            $booking = new BookingList;           
-
-            $booking->user_id = Auth::user()->id;
-
-            $booking->total_passenger = $input['pas'];
-            $booking->total_cost = $input['total_cost'];
-            $booking->payment_method = $input['payment_method'];
-            $booking->card_number = $input['card_number'];
-            $booking->name_card = $input['name_card'];
-            $booking->ccv_code = $input['ccv_code'];
-            $booking->flight_id = $input['flight_id'];
-
-            for ($i=1; $i <= $request->pas; $i++) { 
-                $title = 'title'.$i;
-                $firstname = 'pas_first_name'.$i;
-                $lastname = 'pas_last_name'.$i;
-                $passenger = new Passenger;
-                $passenger->title = $input[$title];
-                $passenger->pas_first_name = $input[$firstname];
-                $passenger->pas_last_name = $input[$lastname];
-                $passenger->flight_id = $booking->flight_id;
-                $passenger->user_id = Auth::user()->id; 
-                $passenger->save();
-                
-                }
-            $booking->save();
-
-            // }
-            return redirect()->action('BookingController@detailBooking', ['booking'=>$booking, 'passenger'=>$passenger]);
-        }
-        
-        
-    }
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function detailBooking($id)
-    {
-        $booking = DB::table('booking_list')->where('id', '=', $id)->first();
-        $flight = DB::table('flights')->where('id', '=', $booking->flight_id)->first();
-        $airport_from = DB::table('airports')->where('id', '=',  $flight->flight_airport_from_id)->first();
-        $airport_to = DB::table('airports')->where('id', '=',  $flight->flight_airport_to_id)->first();
-        $user = Auth::user()->where('id', '=',  $booking->user_id)->first();
-        $passenger = DB::table('passenger')->where([
-            ['user_id', '=', $booking->user_id],
-            ['flight_id', '=', $booking->flight_id]
-        ])->get();
-
-        $fare = $passenger->count();
-        $cost = $flight->flight_cost * $fare;
-
-        return view('detail_booking', [
-        'booking' => $booking,
-        'flight' => $flight,
-        'airport_from'=> $airport_from,
-        'airport_to'=> $airport_to,
-        'passenger' => $passenger,
-        'user' => $user,
-        'cost' => $cost,
-        'fare' => $fare
-      ]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function MannageTicket($userid)
     { 
         $users = Auth::user()->id;        
@@ -224,35 +42,128 @@ class BookingController extends Controller
         }      
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    
+    public function editPassenger(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withInput($request->all())->withErrors($validator->errors());
+        } else {                       
+                $passenger = Db::table('passenger')->where('id', '=', $request->id)->update([
+                    'title' => $request->title,
+                    'pas_first_name' => $request->firstname,
+                    'pas_last_name' => $request->lastname,
+                ]);
+                session()->flash('message', 'Update infomation successfully.');
+                return redirect()->action('BookingController@MannageTicket', ['userid'=>Auth::user()->id]);
+            }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+    public function passenger($pasid) {
+        $passenger =  Db::table('passenger')->where('id', '=', $pasid)->get()->first();
+        return view('editpassenger', [
+          'passenger' => $passenger
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
+    public function removePassenger($pasid)
+    {
+        $pas_del = DB::table('passenger')->where('id', '=', $pasid)->get()->first();        
+        $total_pas = DB::table('booking_list')->where('flight_id', '=', $pas_del->flight_id)->get()->first();
+        $total_passenger =  $total_pas->total_passenger-1;
+        DB::table('passenger')->where('id', '=', $pasid)->delete();
+        DB::table('booking_list')->where('flight_id', '=', $pas_del->flight_id)->update(['total_passenger'=> $total_passenger]);
+        return redirect()->back();
+    }
+
+     
+    public function booking(Request $request)
+    {
+        $data = array();
+        for ($i=1; $i <= $request->pas; $i++) { 
+            $data[] = [ 
+                'title'.$i => 'required|string|max:25',
+                'pas_first_name'.$i => 'required|string|max:255',
+                'pas_last_name'.$i => 'required|string|max:255',]                
+            }
+        $validator = Validator::make($request->all(), [
+         $data,
+          'payment_method' => 'required|string|max:255',
+          'card_number' => 'required|string|max:19|min:13',
+          'name_card' => 'required|string|max:255',
+          'ccv_code' => 'required|string|max:4|min:3',
+        ]);
+        if ($validator->fails()) {
+            return redirect()
+                        ->back()
+                        ->withErrors($validator->errors())
+                        ->withInput();
+                    }
+        else {
+            $input = $request->all();
+            $booking = new BookingList;           
+
+            $booking->user_id = Auth::user()->id;
+
+            $booking->total_passenger = $input['pas'];
+            $booking->total_cost = $input['total_cost'];
+            $booking->payment_method = $input['payment_method'];
+            $booking->card_number = $input['card_number'];
+            $booking->name_card = $input['name_card'];
+            $booking->ccv_code = $input['ccv_code'];
+            $booking->flight_id = $input['flight_id'];
+
+            for ($i=1; $i <= $request->pas; $i++) { 
+                    $title = 'title'.$i;
+                    $firstname = 'pas_first_name'.$i;
+                    $lastname = 'pas_last_name'.$i;
+                    $passenger = new Passenger;
+                    $passenger->title = $input[$title];
+                    $passenger->pas_first_name = $input[$firstname];
+                    $passenger->pas_last_name = $input[$lastname];
+                    $passenger->flight_id = $booking->flight_id;
+                    $passenger->user_id = Auth::user()->id; 
+                    $passenger->save();                
+                }
+            $booking->save();
+            return redirect()->action('BookingController@detailBooking', ['booking'=>$booking, 'passenger'=>$passenger]);
+        }
+    }
+
+
+    public function detailBooking($id)
+    {
+        $booking = DB::table('booking_list')->where('id', '=', $id)->first();
+        $flight = DB::table('flights')->where('id', '=', $booking->flight_id)->first();
+        $airport_from = DB::table('airports')->where('id', '=',  $flight->flight_airport_from_id)->first();
+        $airport_to = DB::table('airports')->where('id', '=',  $flight->flight_airport_to_id)->first();
+        $user = Auth::user()->where('id', '=',  $booking->user_id)->first();
+        $passenger = DB::table('passenger')->where([
+            ['user_id', '=', $booking->user_id],
+            ['flight_id', '=', $booking->flight_id]
+        ])->get();
+
+        $fare = $passenger->count();
+        $cost = $flight->flight_cost * $fare;
+
+        return view('detail_booking', [
+        'booking' => $booking,
+        'flight' => $flight,
+        'airport_from'=> $airport_from,
+        'airport_to'=> $airport_to,
+        'passenger' => $passenger,
+        'user' => $user,
+        'cost' => $cost,
+        'fare' => $fare
+      ]);
+    }
+
+
     public function destroy($bookid)
     {
         $book_des = DB::table('booking_list')->where('id', '=', $bookid)->get()->first();

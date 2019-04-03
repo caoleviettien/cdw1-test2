@@ -11,10 +11,6 @@
 |
 */
 
-// index
-/*
-  Flight routes
-*/
 
 // Index
 Route::get('/', [
@@ -148,6 +144,4 @@ Auth::routes();
 Route::get('user/update', 'Auth\UserController@index')->name('user.update');
 Route::post('user/update', 'Auth\UserController@update')->name('user.update');
 Route::get('/home', 'HomeController@index')->name('home');
-
-
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
